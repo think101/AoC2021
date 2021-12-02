@@ -2006,9 +2006,12 @@ public class day1 {
         };
 
         int increaseCnt = 0;
+        int[] sums = new int[input.length];
+        sums[0] = sums[1] = Integer.MAX_VALUE;
 
-        for (int i = 1; i < input.length; i++) {
-            if (input[i] > input[i - 1]) {
+        for (int i = 2; i < input.length; i++) {
+            sums[i] = input[i - 2] + input[i - 1] + input[i];
+            if(sums[i] > sums[i - 1]) {
                 increaseCnt++;
             }
         }
