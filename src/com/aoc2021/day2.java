@@ -1005,18 +1005,17 @@ public class day2 {
                 "forward 5"
         };
 
-        int position = 0, depth = 0;
+        int position = 0, depth = 0, aim = 0;
         for(String s : moves) {
             String[] parts = s.split(" ");
 
-            if(parts[0].equals("forward")) {
-                position += Integer.parseInt(parts[1]);
-            }
-            else if(parts[0].equals("up")) {
-                depth -= Integer.parseInt(parts[1]);
-            }
-            else if(parts[0].equals("down")) {
-                depth += Integer.parseInt(parts[1]);
+            switch (parts[0]) {
+                case "forward" -> {
+                    position += Integer.parseInt(parts[1]);
+                    depth += aim * Integer.parseInt(parts[1]);
+                }
+                case "up" -> aim -= Integer.parseInt(parts[1]);
+                case "down" -> aim += Integer.parseInt(parts[1]);
             }
         }
 
