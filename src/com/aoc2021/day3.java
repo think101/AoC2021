@@ -1,6 +1,8 @@
 package com.aoc2021;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class day3 {
     public static void main(String[] args) {
@@ -1007,33 +1009,37 @@ public class day3 {
                 "100000100100"
         };
 
-        StringBuilder gamma = new StringBuilder(), epsilon = new StringBuilder();
-        int len = data[0].length();
-        int[] oneCount = new int[len];
+        List<String> oxygenRate = rateCacl(Arrays.asList(data), 0, true);
+        List<String> co2Rate = rateCacl(Arrays.asList(data), 0, false);
 
-
-        for (String datum : data) {
-            for (int j = 0; j < len; j++) {
-                if (datum.charAt(j) == '1') {
-                    oneCount[j]++;
-                }
-            }
-        }
-
-        for (int i = 0; i < len; i++) {
-            if(oneCount[i] > (data.length+1)/2) {
-                gamma.append('1');
-                epsilon.append('0');
-            }
-            else {
-                gamma.append('0');
-                epsilon.append('1');
-            }
-        }
-
-        int g = Integer.parseInt(gamma.toString(), 2);
-        int e = Integer.parseInt(epsilon.toString(), 2);
+        int g = Integer.parseInt(oxygenRate.get(0), 2);
+        int e = Integer.parseInt(co2Rate.get(0), 2);
 
         System.out.println(g * e);
+    }
+
+    private static List<String> rateCacl(List<String> data, int pos, boolean mostCommon) {
+        if(data.size() == 1) {
+            return data;
+        }
+
+        List<String> result = new ArrayList<>();
+
+        int oneCount = 0;
+        for(String s : data) {
+            if(s.charAt(pos) == '1') {
+                oneCount++;
+            }
+        }
+
+        char checkChar = mostCommon ? oneCount >= (data.size()+1)/2 ? '1' : '0'
+                : oneCount < (data.size()+1)/2 ? '1' : '0';
+        for(String s : data) {
+            if(s.charAt(pos) == checkChar) {
+                result.add(s);
+            }
+        }
+
+        return rateCacl(result, pos+1, mostCommon);
     }
 }
