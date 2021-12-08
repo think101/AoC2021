@@ -20,13 +20,14 @@ public class day4 {
         List<int[][]> boards = getBoards( "src/main/resources/day4_input.txt");
         //List<int[][]> boards = getBoards( "src/main/resources/day4_example.txt");
         List<int[][]> boardsStats = initMarkStatus(boards);
+        boolean[] winBoards = new boolean[boards.size()];
 
         for(int draw : draws) {
-            Integer score = markBoards(boards, boardsStats, draw);
+            Integer score = markBoards(boards, boardsStats, draw, winBoards);
 
             if(score != null) {
                 System.out.println(score);
-                break;
+                //break;
             }
         }
     }
@@ -86,14 +87,18 @@ public class day4 {
         return boards;
     }
 
-    private static Integer markBoards(List<int[][]> boards, List<int[][]> boardsStats, int draw) {
+    private static Integer markBoards(List<int[][]> boards, List<int[][]> boardsStats, int draw, boolean[] winBoards) {
         Integer score = null;
 
         for(int i = 0; i < boards.size(); i++) {
+            if(winBoards[i]) {
+                continue;
+            }
+
             score = markBoard(boards.get(i), boardsStats.get(i), draw);
 
             if(score != null) {
-                return score;
+                winBoards[i] = true;
             }
         }
 
@@ -143,6 +148,7 @@ public class day4 {
     }
 
     private static Integer calculateScore(int[][] board, int[][] boardStat, int draw) {
+        System.out.println("bingo at " + draw);
         int sum = 0;
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[i].length; j++) {
