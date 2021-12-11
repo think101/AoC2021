@@ -1,4 +1,4 @@
-package com.aoc2021;
+package main.java.com.aoc2021;
 
 public class day2 {
     public static void main(String[] args) {

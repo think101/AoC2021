@@ -1,4 +1,4 @@
-package com.aoc2021;
+package main.java.com.aoc2021;
 
 import java.util.ArrayList;
 import java.util.Arrays;
