@@ -10,6 +10,8 @@ import java.util.List;
 
 public class day5 {
 
+    // note for part 2 the example diagram and answer seems wrong
+
     public static void main(String[] args) {
 
         //int[][] board = getBoard( "src/main/resources/day5_example.txt");
@@ -24,7 +26,7 @@ public class day5 {
             }
         }
 
-        System.out.println("Part 1: " + count);
+        System.out.println("Part 2: " + count);
 
     }
 
@@ -39,7 +41,6 @@ public class day5 {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
 
             String line;
-            List<int[]> board = new ArrayList<>();
             while ((line = reader.readLine()) != null) {
 
                 String[] points = line.trim().split("->");
@@ -61,7 +62,8 @@ public class day5 {
                 Point startPoint = new Point(startX, startY);
                 Point endPoint = new Point(endX, endY);
 
-                if (startPoint.x == endPoint.x || startPoint.y == endPoint.y) {
+                if (startPoint.x == endPoint.x || startPoint.y == endPoint.y
+                        || Math.abs(startPoint.x - endPoint.x) == Math.abs(startPoint.y - endPoint.y)) {
                     lines.add(new Line(startPoint, endPoint));
                 }
             }
@@ -78,7 +80,7 @@ public class day5 {
                         result[l.start.x][i] += 1;
                     }
                 }
-                else {
+                else if (l.start.y == l.end.y) {
                     int tMin = Math.min(l.start.x, l.end.x);
                     int tMax = Math.max(l.start.x, l.end.x);
 
@@ -86,6 +88,34 @@ public class day5 {
                         result[i][l.start.y] += 1;
                     }
                 }
+                else {
+                    if(l.start.x > l.end.x) {
+                        if(l.start.y > l.end.y) {
+                            for(int i = l.start.x, j = l.start.y; i >= l.end.x; i--, j--) {
+                                result[i][j] += 1;
+                            }
+                        }
+                        else {
+                            for(int i = l.start.x, j = l.start.y; i >= l.end.x; i--, j++) {
+                                result[i][j] += 1;
+                            }
+                        }
+                    }
+                    else {
+                        if(l.start.y > l.end.y) {
+                            for(int i = l.start.x, j = l.start.y; i <= l.end.x; i++, j--) {
+                                result[i][j] += 1;
+                            }
+                        }
+                        else {
+                            for(int i = l.start.x, j = l.start.y; i <= l.end.x; i++, j++) {
+                                result[i][j] += 1;
+                            }
+                        }
+                    }
+                }
+
+                //System.out.println(Arrays.deepToString(result));
             }
 
         }catch(IOException e){
