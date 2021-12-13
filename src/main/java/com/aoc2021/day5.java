@@ -12,11 +12,26 @@ public class day5 {
 
     public static void main(String[] args) {
 
+        //int[][] board = getBoard( "src/main/resources/day5_example.txt");
+        int[][] board = getBoard( "src/main/resources/day5_input.txt");
+
+        int count = 0;
+        for (int[] ints : board) {
+            for (int anInt : ints) {
+                if (anInt > 1) {
+                    count++;
+                }
+            }
+        }
+
+        System.out.println("Part 1: " + count);
+
     }
 
     private static int[][] getBoard(String fileName) {
 
         List<Line> lines = new ArrayList<>();
+        int[][] result;
 
         // get max number from input file
         int max = -1;
@@ -25,7 +40,7 @@ public class day5 {
 
             String line;
             List<int[]> board = new ArrayList<>();
-            while((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
 
                 String[] points = line.trim().split("->");
                 String[] start = points[0].trim().split(",");
@@ -39,27 +54,49 @@ public class day5 {
 
                 Integer[] nums = {startX, startY, endX, endY};
                 int maxNum = Collections.max(Arrays.asList(nums));
-                if(Collections.max(Arrays.asList(nums)) > max) {
-                    max = Collections.max(Arrays.asList(nums));
+                if (maxNum > max) {
+                    max = maxNum;
                 }
 
                 Point startPoint = new Point(startX, startY);
                 Point endPoint = new Point(endX, endY);
 
-
+                if (startPoint.x == endPoint.x || startPoint.y == endPoint.y) {
+                    lines.add(new Line(startPoint, endPoint));
+                }
             }
 
+            // construct board
+            result = new int[max + 1][max + 1];
 
+            for (Line l : lines) {
+                if(l.start.x == l.end.x) {
+                    int tMin = Math.min(l.start.y, l.end.y);
+                    int tMax = Math.max(l.start.y, l.end.y);
 
-        } catch (IOException e) {
+                    for (int i = tMin; i <= tMax; i++) {
+                        result[l.start.x][i] += 1;
+                    }
+                }
+                else {
+                    int tMin = Math.min(l.start.x, l.end.x);
+                    int tMax = Math.max(l.start.x, l.end.x);
+
+                    for (int i = tMin; i <= tMax; i++) {
+                        result[i][l.start.y] += 1;
+                    }
+                }
+            }
+
+        }catch(IOException e){
             e.printStackTrace();
+            throw new RuntimeException("Error reading file");
         }
 
-        return null;
-
+        return result;
     }
 
-    static class Point {
+    private static class Point {
         int x;
         int y;
 
@@ -69,8 +106,15 @@ public class day5 {
         }
     }
 
-    static class Line {
+    private static class Line {
         Point start;
         Point end;
+
+        public Line(Point start, Point end) {
+            this.start = start;
+            this.end = end;
+        }
     }
 }
+
+
