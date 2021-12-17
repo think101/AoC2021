@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class day7 {
 
@@ -21,10 +21,15 @@ public class day7 {
     private static int calcMinDistance(int[] input) {
         int result = Integer.MAX_VALUE;
 
-        for (int k : input) {
+        int maxPosition = Arrays.stream(input).max().getAsInt();
+
+        for (int k = 0; k <= maxPosition; k++) {
             int distance = 0;
             for (int i : input) {
-                distance += Math.abs(k - i);
+                int t = Math.abs(k - i);
+                for (int l = 1; l <= t; l++) {
+                    distance += l;
+                }
             }
 
             if (distance < result) {
@@ -55,3 +60,7 @@ public class day7 {
         return null;
     }
 }
+
+
+
+// hint 1: need to check all positions, even positions that are not used
