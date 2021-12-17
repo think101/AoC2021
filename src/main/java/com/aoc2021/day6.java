@@ -48,3 +48,4 @@ public class day6 {
 
 // hint 1: To solve this puzzle, you only need a 9-element array.
 // hint 2: use long instead of int for the array elements, otherwise int overflows cause wrong result.
+// hint 3: use int list and model each lantern fish as an int, the example input 256 days result 26984457539 takes ~27*4 GB of memory.
