@@ -3,6 +3,7 @@ package main.java.com.aoc2021;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
@@ -10,7 +11,7 @@ public class day10 {
     public static void main(String[] args) {
        List<String> lines = getLines();
 
-       System.out.println("Syntax error score: " + calcSyntaxErrorScore(lines));
+       System.out.println("Autocomplete score: " + calcSyntaxErrorScore(lines));
     }
 
     private static List<String> getLines() {
@@ -32,10 +33,10 @@ public class day10 {
         return lines;
     }
 
-    private static int calcSyntaxErrorScore(List<String> lines) {
-        int result = 0;
+    private static long calcSyntaxErrorScore(List<String> lines) {
+        long result = 0;
 
-        List<Character> wrongLetters = new ArrayList<>();
+        List<Long> autoCompleteScore = new ArrayList<>();
 
         for(String line : lines) {
             if(line == null || line.isEmpty()) {
@@ -43,6 +44,7 @@ public class day10 {
             }
 
             Stack<Character> stack = new Stack<>();
+            boolean syntaxError = false;
             for(int i = 0; i < line.length(); i++) {
                 char c = line.charAt(i);
                 if(c == '(' || c == '[' || c == '{' || c == '<') {
@@ -51,7 +53,7 @@ public class day10 {
                 else if(c == ')' || c == ']' || c == '}' || c == '>') {
                     if( !stack.isEmpty() && checkSyntaxError(stack, c)) {
                         //System.out.println("Wrong letter: " + c + " at position: " + i + " in line: " + line);
-                        wrongLetters.add(c);
+                        syntaxError = true;
                         break;
                     }
                     else {
@@ -61,23 +63,16 @@ public class day10 {
                     }
                 }
             }
+
+            if( !stack.isEmpty() && !syntaxError) {
+                //System.out.println("line incomplete" + line);
+                autoCompleteScore.add(calcAutoCompleteScore(stack));
+            }
         }
 
-        if(!wrongLetters.isEmpty()) {
-            for(char c : wrongLetters) {
-                if( c == ')') {
-                    result += 3;
-                }
-                else if(c == ']') {
-                    result += 57;
-                }
-                else if(c == '}') {
-                    result += 1197;
-                }
-                else if(c == '>') {
-                    result += 25137;
-                }
-            }
+        if(!autoCompleteScore.isEmpty()) {
+            Collections.sort(autoCompleteScore);
+            result = autoCompleteScore.get((autoCompleteScore.size()) / 2);
         }
 
         return result;
@@ -91,4 +86,29 @@ public class day10 {
                 || (stack.peek() == '<' && c != '>');
     }
 
+    private static Long calcAutoCompleteScore(Stack<Character> stack) {
+        long result = 0L;
+        while( !stack.isEmpty()) {
+            char c = stack.pop();
+            result *= 5;
+
+            if( c == '(') {
+                result += 1;
+            }
+            else if(c == '[') {
+                result += 2;
+            }
+            else if(c == '{') {
+                result += 3;
+            }
+            else if(c == '<') {
+                result += 4;
+            }
+        }
+
+        return result;
+    }
 }
+
+
+// hint 1: use long to avoid int overflow
